@@ -14,6 +14,7 @@ import { PaymentService } from './payments/PaymentService';
 import { PosUnavailableError, type PosProvider } from './pos';
 import { registerDataRoutes } from './routes/data';
 import { registerPaymentRoutes } from './routes/payments';
+import { registerReportRoutes } from './routes/reports';
 import { registerPaymentSocket } from './routes/ws';
 import { webhookRoutes } from './routes/webhooks';
 
@@ -101,6 +102,14 @@ export async function buildApp(deps: AppDeps): Promise<BuiltApp> {
 
   registerDataRoutes(app, data);
   registerPaymentRoutes(app, payments);
+  registerReportRoutes(app, {
+    enabled: config.POS_PROVIDER === 'real' && config.POS_API_KEY.length > 0,
+    reporting: {
+      baseUrl: config.POS_BASE_URL,
+      apiKey: config.POS_API_KEY,
+      requestTimeoutMs: config.POS_REQUEST_TIMEOUT_MS,
+    },
+  });
   registerPaymentSocket(app, payments, events);
   await app.register(webhookRoutes, { pos, payments, webhookEvents });
 

@@ -23,7 +23,7 @@ export function ScaledStage({ children, dir }: { children: ReactNode; dir: 'ltr'
   }, []);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center overflow-hidden bg-[#0b1320]">
+    <div className="fixed inset-0 flex items-center justify-center overflow-hidden bg-[#2a0e14]">
       <div
         className="stage relative shrink-0 overflow-hidden bg-canvas text-ink"
         dir={dir}

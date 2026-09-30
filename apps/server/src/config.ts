@@ -17,6 +17,10 @@ const EnvSchema = z.object({
   POS_PROVIDER: z.enum(['mock', 'real']).default('mock'),
   POS_BASE_URL: z.url().default('http://localhost:4100'),
   POS_API_KEY: z.string().default(''),
+  /** Noqoody: the merchant id and AES key. Only required when POS_PROVIDER=real. */
+  POS_MERCHANT_ID: z.string().default(''),
+  POS_ENCRYPTION_KEY: z.string().default(''),
+  /** Noqoody: the POS device to charge (posDeviceId). Carried through as the terminal id. */
   POS_TERMINAL_ID: z.string().min(1).default('TERM-0001'),
   POS_WEBHOOK_SECRET: z.string().min(16, 'POS_WEBHOOK_SECRET must be at least 16 characters'),
   POS_WEBHOOK_TOLERANCE_SECONDS: z.coerce.number().int().positive().default(300),

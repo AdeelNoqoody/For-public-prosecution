@@ -13,6 +13,9 @@ export function createPosProvider(config: ServerConfig, logger: Logger): PosProv
     webhookSecret: config.POS_WEBHOOK_SECRET,
     webhookToleranceSeconds: config.POS_WEBHOOK_TOLERANCE_SECONDS,
     requestTimeoutMs: config.POS_REQUEST_TIMEOUT_MS,
+    merchantId: config.POS_MERCHANT_ID,
+    encryptionKey: config.POS_ENCRYPTION_KEY,
+    deviceTimeoutSeconds: config.PAYMENT_TIMEOUT_SECONDS,
   };
   const log = logger.child({ component: 'pos' });
   return config.POS_PROVIDER === 'real'

@@ -35,6 +35,9 @@ export class FakePosProvider extends MockPosProvider {
         webhookSecret: WEBHOOK_SECRET,
         webhookToleranceSeconds: 300,
         requestTimeoutMs: 1000,
+        merchantId: '',
+        encryptionKey: '',
+        deviceTimeoutSeconds: 120,
       },
       silentLogger,
     );

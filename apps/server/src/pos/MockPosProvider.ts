@@ -24,6 +24,11 @@ export interface GenericPosConfig {
   webhookSecret: string;
   webhookToleranceSeconds: number;
   requestTimeoutMs: number;
+  /** Noqoody (real provider) only — ignored by the mock. */
+  merchantId: string;
+  encryptionKey: string;
+  /** Seconds the terminal waits for the customer to present a card. */
+  deviceTimeoutSeconds: number;
 }
 
 /**
