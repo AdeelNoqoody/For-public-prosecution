@@ -1,0 +1,24 @@
+{
+  "name": "@kiosk/mock-pos",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Stand-in for the POS provider: accepts transactions and sends signed webhooks",
+  "scripts": {
+    "dev": "tsx watch --clear-screen=false src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsup src/index.ts --format esm --platform node --target node22 --clean --no-external @kiosk/shared",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@kiosk/shared": "*",
+    "dotenv": "^18.0.4",
+    "fastify": "^5.12.5",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.23.15"
+  }
+}

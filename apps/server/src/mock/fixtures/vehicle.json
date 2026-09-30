@@ -1,0 +1,8 @@
+{
+  "make": "Toyota",
+  "model": "Land Cruiser",
+  "year": 2022,
+  "color": { "en": "Pearl White", "ar": "أبيض لؤلؤي" },
+  "ownerName": "Sample Owner",
+  "registrationExpiry": "2027-03-14"
+}

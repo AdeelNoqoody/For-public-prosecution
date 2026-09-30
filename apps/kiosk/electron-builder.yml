@@ -1,0 +1,45 @@
+# Windows installer for the kiosk app: `npm run dist:win` (from the repo root or apps/kiosk).
+# The app is standalone: the server and mock POS run inside it, so the target PC needs
+# nothing else installed (no Node.js).
+appId: com.example.selfservicekiosk
+productName: Self-Service Kiosk
+copyright: Copyright © Kiosk Team
+
+directories:
+  output: release
+  buildResources: build
+
+# Only the built renderer + Electron bundle are shipped (all runtime deps are bundled).
+files:
+  - dist/**
+  - dist-electron/**
+  - build/icon.png
+  - package.json
+  - '!**/*.map'
+asar: true
+npmRebuild: false
+
+# Configuration template, installed next to the executable.
+# Copy it to `kiosk.env` (same folder) and edit it to change settings.
+extraFiles:
+  - from: kiosk.env.example
+    to: kiosk.env.example
+
+win:
+  icon: build/icon.png
+  target:
+    - target: nsis
+      arch: [x64]
+  artifactName: Self-Service-Kiosk-Setup-${version}.${ext}
+  # TODO(signing): add a code-signing certificate for production (signtoolOptions / Azure Trusted Signing).
+
+nsis:
+  # Normal install wizard, per user (no admin rights needed).
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  shortcutName: Self-Service Kiosk
+  runAfterFinish: true
+  deleteAppDataOnUninstall: false

@@ -1,0 +1,49 @@
+{
+  "name": "kiosk-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Self-service portrait kiosk with POS card payments (Electron + React + Fastify)",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n server,pos,kiosk -c cyan,magenta,green \"npm:dev:server\" \"npm:dev:mock-pos\" \"npm:dev:kiosk\"",
+    "dev:server": "npm run dev -w @kiosk/server",
+    "dev:mock-pos": "npm run dev -w @kiosk/mock-pos",
+    "dev:kiosk": "npm run dev -w @kiosk/app",
+    "dev:web": "concurrently -k -n server,pos,web -c cyan,magenta,green \"npm:dev:server\" \"npm:dev:mock-pos\" \"npm run dev:web -w @kiosk/app\"",
+    "demo": "npm run build -w @kiosk/app && npm start -w @kiosk/app -- --embedded",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "npm run build -w @kiosk/app && playwright test",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "dist:win": "npm run dist:win -w @kiosk/app"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^24.0.0",
+    "concurrently": "^10.0.5",
+    "eslint": "^10.11.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.12.0",
+    "prettier": "^3.9.9",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^5.0.2"
+  },
+  "allowScripts": {
+    "electron@44.4.5": true,
+    "esbuild@0.27.7": true,
+    "esbuild@0.28.2": true,
+    "electron-winstaller@5.4.0": true
+  }
+}

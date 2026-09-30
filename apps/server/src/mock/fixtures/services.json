@@ -1,0 +1,89 @@
+[
+  {
+    "id": "traffic-violations",
+    "flow": "vehicle",
+    "category": "traffic",
+    "icon": "car",
+    "title": { "en": "Pay traffic violations", "ar": "دفع المخالفات المرورية" },
+    "description": {
+      "en": "Look up and pay violations by car number",
+      "ar": "استعلم عن المخالفات وادفعها برقم السيارة"
+    },
+    "fields": []
+  },
+  {
+    "id": "vehicle-inquiry",
+    "flow": "vehicle",
+    "category": "traffic",
+    "icon": "search",
+    "title": { "en": "Inquire by car number", "ar": "الاستعلام برقم السيارة" },
+    "description": {
+      "en": "View vehicle details and outstanding items",
+      "ar": "عرض بيانات المركبة والمبالغ المستحقة"
+    },
+    "fields": []
+  },
+  {
+    "id": "fee-lookup",
+    "flow": "form",
+    "category": "other",
+    "icon": "receipt",
+    "title": { "en": "Pay a service fee", "ar": "دفع رسوم خدمة" },
+    "description": {
+      "en": "Find a fee by its payment reference number",
+      "ar": "ابحث عن الرسوم برقم مرجع الدفع"
+    },
+    "fields": [
+      {
+        "id": "referenceNumber",
+        "label": { "en": "Payment reference number", "ar": "رقم مرجع الدفع" },
+        "keyboard": "numeric",
+        "maxLength": 10,
+        "pattern": "^[0-9]{6,10}$",
+        "placeholder": "6–10 digits"
+      }
+    ]
+  },
+  {
+    "id": "certificate-request",
+    "flow": "form",
+    "category": "other",
+    "icon": "certificate",
+    "title": { "en": "Request a certificate", "ar": "طلب شهادة" },
+    "description": {
+      "en": "Request a no-objection certificate by ID number",
+      "ar": "طلب شهادة عدم ممانعة برقم الهوية"
+    },
+    "fields": [
+      {
+        "id": "idNumber",
+        "label": { "en": "ID number", "ar": "رقم الهوية" },
+        "keyboard": "numeric",
+        "maxLength": 11,
+        "pattern": "^[0-9]{11}$",
+        "placeholder": "11 digits"
+      }
+    ]
+  },
+  {
+    "id": "case-status",
+    "flow": "form",
+    "category": "other",
+    "icon": "scale",
+    "title": { "en": "Case status inquiry", "ar": "الاستعلام عن حالة قضية" },
+    "description": {
+      "en": "Check the status of a case by reference number",
+      "ar": "تحقق من حالة القضية برقم المرجع"
+    },
+    "fields": [
+      {
+        "id": "caseNumber",
+        "label": { "en": "Case reference number", "ar": "الرقم المرجعي للقضية" },
+        "keyboard": "alphanumeric",
+        "maxLength": 16,
+        "pattern": "^[A-Z0-9-]{4,16}$",
+        "placeholder": "e.g. CS-2026-1234"
+      }
+    ]
+  }
+]

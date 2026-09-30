@@ -1,0 +1,195 @@
+@import 'tailwindcss';
+
+/* Colours come from src/config/branding.ts (applied as CSS variables at startup). */
+@theme inline {
+  --color-brand: var(--brand-primary);
+  --color-brand-dark: var(--brand-primary-dark);
+  --color-brand-soft: var(--brand-primary-soft);
+  --color-on-brand: var(--brand-on-primary);
+  --color-accent: var(--brand-accent);
+  --color-canvas: var(--brand-background);
+  --color-surface: var(--brand-surface);
+  --color-ink: var(--brand-text);
+  --color-muted: var(--brand-muted);
+  --color-line: var(--brand-line);
+  --color-success: var(--brand-success);
+  --color-success-soft: var(--brand-success-soft);
+  --color-danger: var(--brand-danger);
+  --color-danger-soft: var(--brand-danger-soft);
+  --color-warning: var(--brand-warning);
+  --color-warning-soft: var(--brand-warning-soft);
+  --font-sans: 'Cairo Variable', 'Segoe UI', Tahoma, system-ui, sans-serif;
+}
+
+/*
+ * The UI is designed on a fixed 1080×1920 stage (see ScaledStage). A 24px root size makes
+ * the Tailwind rem scale kiosk-sized: text-base = 24px, p-4 = 24px.
+ */
+html {
+  font-size: 24px;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background: #2a0e14;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  overscroll-behavior: none;
+}
+
+img {
+  -webkit-user-drag: none;
+}
+
+.kiosk-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--brand-line) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ─── Motion ────────────────────────────────────────────────────── */
+
+@keyframes screen-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.screen-enter {
+  animation: screen-enter 220ms ease-out;
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+.caret {
+  animation: caret-blink 1s step-end infinite;
+}
+
+@keyframes start-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(255 255 255 / 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 28px rgb(255 255 255 / 0);
+  }
+}
+.start-pulse {
+  animation: start-pulse 2.4s ease-in-out infinite;
+}
+
+.attract-glow {
+  background:
+    radial-gradient(600px 420px at 85% 10%, rgb(255 255 255 / 0.14), transparent 70%),
+    radial-gradient(
+      520px 380px at 10% 45%,
+      color-mix(in srgb, var(--brand-accent) 28%, transparent),
+      transparent 70%
+    );
+}
+
+@keyframes card-tap {
+  0%,
+  100% {
+    transform: translate(-50%, 0) rotate(-10deg);
+  }
+  45%,
+  60% {
+    transform: translate(-50%, 150px) rotate(0deg);
+  }
+}
+.card-tap {
+  animation: card-tap 2.8s ease-in-out infinite;
+}
+
+@keyframes waves {
+  0%,
+  100% {
+    transform: scale(0.9);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}
+.terminal-waves {
+  animation: waves 1.4s ease-in-out infinite;
+}
+
+@keyframes status-dot {
+  50% {
+    opacity: 0.25;
+  }
+}
+.status-dot {
+  animation: status-dot 1.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* ─── Receipt printing ──────────────────────────────────────────── */
+
+.print-receipt {
+  display: none;
+}
+
+@media print {
+  html,
+  body,
+  #root {
+    background: #fff;
+    overflow: visible;
+    height: auto;
+  }
+  body * {
+    visibility: hidden;
+  }
+  .stage {
+    transform: none !important;
+  }
+  .print-receipt,
+  .print-receipt * {
+    visibility: visible;
+  }
+  .print-receipt {
+    display: block;
+    position: fixed;
+    inset: 0 auto auto 0;
+    width: 72mm;
+    padding: 4mm;
+    color: #000;
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+  .print-receipt h2 {
+    font-size: 14pt;
+    font-weight: 700;
+    margin-bottom: 2mm;
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "@kiosk/app",
+  "productName": "Self-Service Kiosk",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Portrait self-service kiosk with card payments",
+  "author": "Kiosk Team",
+  "main": "dist-electron/main.cjs",
+  "scripts": {
+    "dev": "concurrently -k -n vite,electron -c green,blue \"vite\" \"npm:dev:electron\"",
+    "dev:electron": "tsup && wait-on tcp:127.0.0.1:5173 && electron . --dev-server-url=http://localhost:5173",
+    "dev:web": "vite",
+    "build": "vite build && tsup",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.electron.json",
+    "start": "electron .",
+    "dist:win": "npm run build && electron-builder --win --config electron-builder.yml"
+  },
+  "devDependencies": {
+    "@fontsource-variable/cairo": "^5.3.0",
+    "@kiosk/shared": "*",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "concurrently": "^10.0.5",
+    "dotenv": "^18.0.4",
+    "electron": "44.4.5",
+    "electron-builder": "^26.15.3",
+    "lucide-react": "^1.48.0",
+    "qrcode.react": "^4.2.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "tailwindcss": "^4.3.3",
+    "tsup": "^8.5.1",
+    "vite": "^8.3.1",
+    "wait-on": "^9.4.0",
+    "zod": "^4.6.5"
+  }
+}

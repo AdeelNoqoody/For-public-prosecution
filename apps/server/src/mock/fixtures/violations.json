@@ -1,0 +1,40 @@
+[
+  {
+    "id": "V-2026-104233",
+    "date": "2026-08-14T09:42:00+03:00",
+    "location": { "en": "Corniche Street, Doha", "ar": "شارع الكورنيش، الدوحة" },
+    "description": {
+      "en": "Exceeding the speed limit by 30 km/h",
+      "ar": "تجاوز السرعة المحددة بمقدار 30 كم/س"
+    },
+    "amountMinor": 25,
+    "currency": "QAR"
+  },
+  {
+    "id": "V-2026-118907",
+    "date": "2026-08-29T18:15:00+03:00",
+    "location": { "en": "West Bay, Doha", "ar": "الخليج الغربي، الدوحة" },
+    "description": { "en": "Parking in a no-parking zone", "ar": "الوقوف في مكان ممنوع" },
+    "amountMinor": 25,
+    "currency": "QAR"
+  },
+  {
+    "id": "V-2026-121455",
+    "date": "2026-09-03T07:58:00+03:00",
+    "location": { "en": "Salwa Road, Doha", "ar": "طريق سلوى، الدوحة" },
+    "description": { "en": "Driver not wearing a seat belt", "ar": "عدم ربط حزام الأمان للسائق" },
+    "amountMinor": 25,
+    "currency": "QAR"
+  },
+  {
+    "id": "V-2026-126012",
+    "date": "2026-09-17T21:30:00+03:00",
+    "location": { "en": "Al Rayyan Road", "ar": "طريق الريان" },
+    "description": {
+      "en": "Using a mobile phone while driving",
+      "ar": "استخدام الهاتف المحمول أثناء القيادة"
+    },
+    "amountMinor": 25,
+    "currency": "QAR"
+  }
+]

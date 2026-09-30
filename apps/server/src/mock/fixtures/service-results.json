@@ -1,0 +1,85 @@
+{
+  "fee-lookup": {
+    "title": { "en": "Service fee details", "ar": "تفاصيل رسوم الخدمة" },
+    "status": { "tone": "warning", "label": { "en": "Unpaid", "ar": "غير مدفوعة" } },
+    "rows": [
+      {
+        "label": { "en": "Reference number", "ar": "رقم المرجع" },
+        "value": { "en": "{{input.referenceNumber}}", "ar": "{{input.referenceNumber}}" }
+      },
+      {
+        "label": { "en": "Service", "ar": "الخدمة" },
+        "value": { "en": "Document attestation", "ar": "تصديق مستند" }
+      },
+      {
+        "label": { "en": "Issued on", "ar": "تاريخ الإصدار" },
+        "value": { "en": "2026-09-21", "ar": "2026-09-21" }
+      }
+    ],
+    "payableItems": [
+      {
+        "id": "FEE-{{input.referenceNumber}}",
+        "kind": "SERVICE_FEE",
+        "description": { "en": "Document attestation fee", "ar": "رسوم تصديق مستند" },
+        "amountMinor": 100,
+        "currency": "QAR"
+      }
+    ]
+  },
+  "certificate-request": {
+    "title": { "en": "Certificate request", "ar": "طلب الشهادة" },
+    "status": {
+      "tone": "info",
+      "label": { "en": "Ready — payment required", "ar": "جاهز — مطلوب الدفع" }
+    },
+    "rows": [
+      {
+        "label": { "en": "Request number", "ar": "رقم الطلب" },
+        "value": { "en": "{{reference}}", "ar": "{{reference}}" }
+      },
+      {
+        "label": { "en": "Certificate type", "ar": "نوع الشهادة" },
+        "value": { "en": "No-objection certificate", "ar": "شهادة عدم ممانعة" }
+      },
+      {
+        "label": { "en": "Delivery", "ar": "طريقة الاستلام" },
+        "value": { "en": "Digital (SMS link)", "ar": "إلكترونية (رابط برسالة نصية)" }
+      }
+    ],
+    "payableItems": [
+      {
+        "id": "CERT-{{reference}}",
+        "kind": "SERVICE_FEE",
+        "description": { "en": "Certificate issuance fee", "ar": "رسوم إصدار الشهادة" },
+        "amountMinor": 100,
+        "currency": "QAR"
+      }
+    ]
+  },
+  "case-status": {
+    "title": { "en": "Case status", "ar": "حالة القضية" },
+    "status": { "tone": "success", "label": { "en": "Under review", "ar": "قيد المراجعة" } },
+    "rows": [
+      {
+        "label": { "en": "Case reference", "ar": "مرجع القضية" },
+        "value": { "en": "{{input.caseNumber}}", "ar": "{{input.caseNumber}}" }
+      },
+      {
+        "label": { "en": "Tracking number", "ar": "رقم التتبع" },
+        "value": { "en": "{{reference}}", "ar": "{{reference}}" }
+      },
+      {
+        "label": { "en": "Last update", "ar": "آخر تحديث" },
+        "value": { "en": "2026-09-25", "ar": "2026-09-25" }
+      },
+      {
+        "label": { "en": "Next step", "ar": "الخطوة التالية" },
+        "value": {
+          "en": "You will be notified by SMS",
+          "ar": "سيتم إشعارك برسالة نصية"
+        }
+      }
+    ],
+    "payableItems": []
+  }
+}

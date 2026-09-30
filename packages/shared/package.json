@@ -1,0 +1,17 @@
+{
+  "name": "@kiosk/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared types, Zod schemas and domain logic for the kiosk, server and mock POS",
+  "exports": {
+    ".": "./src/index.ts",
+    "./node": "./src/node/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  }
+}
