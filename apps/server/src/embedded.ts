@@ -4,6 +4,7 @@ import { createDataProvider } from './data';
 import { openDatabase } from './db/database';
 import { createLogger } from './logger';
 import { createPosProvider } from './pos';
+import { ReceiverPoller } from './pos/ReceiverPoller';
 
 export interface EmbeddedServerOptions {
   /** Environment-style settings (kiosk.env + defaults). */
@@ -25,7 +26,7 @@ export async function startEmbeddedServer(options: EmbeddedServerOptions): Promi
   const config = parseConfig({ ...options.env, DATABASE_PATH: options.databasePath });
   const logger = createLogger({ level: config.LOG_LEVEL, file: options.logFile });
   const db = openDatabase(config.DATABASE_PATH);
-  const { app, payments } = await buildApp({
+  const { app, payments, paymentRepo } = await buildApp({
     config,
     logger,
     db,
@@ -34,6 +35,22 @@ export async function startEmbeddedServer(options: EmbeddedServerOptions): Promi
   });
   await app.listen({ port: config.SERVER_PORT, host: config.SERVER_HOST });
   payments.resumePending();
+
+  // Poll the public webhook-receiver for card results and push them to the kiosk UI.
+  let receiverPoller: ReceiverPoller | undefined;
+  if (config.RECEIVER_URL) {
+    receiverPoller = new ReceiverPoller(
+      paymentRepo,
+      payments,
+      {
+        baseUrl: config.RECEIVER_URL,
+        intervalMs: config.RECEIVER_POLL_INTERVAL_MS,
+        requestTimeoutMs: config.POS_REQUEST_TIMEOUT_MS,
+      },
+      logger.child({ component: 'receiver-poller' }),
+    );
+    receiverPoller.start();
+  }
   logger.info(
     {
       dataProvider: config.DATA_PROVIDER,
@@ -45,6 +62,7 @@ export async function startEmbeddedServer(options: EmbeddedServerOptions): Promi
   return {
     url: `http://127.0.0.1:${config.SERVER_PORT}`,
     close: async () => {
+      receiverPoller?.stop();
       await app.close();
       db.close();
     },
