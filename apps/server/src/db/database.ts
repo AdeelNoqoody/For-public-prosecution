@@ -54,6 +54,14 @@ const MIGRATIONS: string[] = [
   );
   CREATE INDEX idx_webhook_event_id ON webhook_events(event_id);
   `,
+  // v2: full transaction detail from the POS provider (for the receipt / records).
+  `
+  ALTER TABLE payments ADD COLUMN rrn TEXT;
+  ALTER TABLE payments ADD COLUMN pun TEXT;
+  ALTER TABLE payments ADD COLUMN terminal_id TEXT;
+  ALTER TABLE payments ADD COLUMN error_code TEXT;
+  ALTER TABLE payments ADD COLUMN customer_message TEXT;
+  `,
 ];
 
 function migrate(db: DatabaseSync): void {

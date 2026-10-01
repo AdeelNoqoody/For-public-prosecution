@@ -81,11 +81,13 @@ export function PaymentResultScreen({ payment }: { payment: PaymentView }) {
       ? t('result.timeout.subtitle')
       : payment.status === 'CANCELLED'
         ? t('result.cancelled.subtitle')
-        : t(
-            payment.failureReason && KNOWN_REASONS.has(payment.failureReason)
-              ? (`reason.${payment.failureReason}` as MessageKey)
-              : 'reason.generic',
-          );
+        : payment.customerMessage
+          ? payment.customerMessage
+          : t(
+              payment.failureReason && KNOWN_REASONS.has(payment.failureReason)
+                ? (`reason.${payment.failureReason}` as MessageKey)
+                : 'reason.generic',
+            );
 
   const print = async () => {
     extend();
@@ -119,33 +121,44 @@ export function PaymentResultScreen({ payment }: { payment: PaymentView }) {
         </h1>
         <p className="mt-4 max-w-[900px] text-3xl text-muted">{subtitle}</p>
 
-        {approved && (
-          <Card className="mt-10 w-full text-start">
-            <dl>
+        <Card className="mt-10 w-full text-start">
+          <dl>
+            {payment.receiptNumber && (
               <DetailRow label={t('result.receiptNumber')} value={payment.receiptNumber} ltrValue />
+            )}
+            <DetailRow label={t('result.reference')} value={payment.merchantReference} ltrValue />
+            {payment.posTransactionId && (
               <DetailRow
                 label={t('result.transactionId')}
                 value={payment.posTransactionId}
                 ltrValue
               />
+            )}
+            <DetailRow
+              label={t('result.amount')}
+              value={formatMoney(payment.amountMinor, payment.currency)}
+            />
+            <DetailRow label={t('result.dateTime')} value={formatDateTime(completedAt)} />
+            {payment.maskedPan && (
               <DetailRow
-                label={t('result.amount')}
-                value={formatMoney(payment.amountMinor, payment.currency)}
+                label={t('result.card')}
+                value={`${payment.cardScheme ?? ''} ${payment.maskedPan}`}
+                ltrValue
               />
-              <DetailRow label={t('result.dateTime')} value={formatDateTime(completedAt)} />
-              {payment.maskedPan && (
-                <DetailRow
-                  label={t('result.card')}
-                  value={`${payment.cardScheme ?? ''} ${payment.maskedPan}`}
-                  ltrValue
-                />
-              )}
-              {payment.authCode && (
-                <DetailRow label={t('result.authCode')} value={payment.authCode} ltrValue />
-              )}
-            </dl>
-          </Card>
-        )}
+            )}
+            {payment.authCode && (
+              <DetailRow label={t('result.authCode')} value={payment.authCode} ltrValue />
+            )}
+            {payment.rrn && <DetailRow label={t('result.rrn')} value={payment.rrn} ltrValue />}
+            {payment.pun && <DetailRow label={t('result.pun')} value={payment.pun} ltrValue />}
+            {payment.terminalId && (
+              <DetailRow label={t('result.terminalId')} value={payment.terminalId} ltrValue />
+            )}
+            {!approved && payment.customerMessage && (
+              <DetailRow label={t('result.reason')} value={payment.customerMessage} />
+            )}
+          </dl>
+        </Card>
 
         {printState === 'failed' && (
           <p className="mt-6 text-xl font-semibold text-danger">{t('result.printFailed')}</p>
@@ -234,25 +247,81 @@ export function PaymentResultScreen({ payment }: { payment: PaymentView }) {
       {/* Print-only receipt (see @media print in index.css). */}
       {approved && (
         <div className="print-receipt" aria-hidden>
-          <h2>{lt(branding.name)}</h2>
-          <p>{t('result.approved.title')}</p>
-          <p>
-            {t('result.receiptNumber')}: {payment.receiptNumber}
-          </p>
-          <p>
-            {t('result.transactionId')}: {payment.posTransactionId}
-          </p>
-          <p>
-            {t('result.amount')}: {formatMoney(payment.amountMinor, payment.currency)}
-          </p>
-          <p>
-            {t('result.dateTime')}: {formatDateTime(completedAt)}
-          </p>
+          <div className="pr-center">
+            <h2>{lt(branding.name)}</h2>
+            <p className="pr-status">{t('result.approved.title')}</p>
+          </div>
+
+          <div className="pr-divider" />
+          <div className="pr-row">
+            <span>{t('result.receiptNumber')}</span>
+            <span>{payment.receiptNumber}</span>
+          </div>
+          <div className="pr-row">
+            <span>{t('result.transactionId')}</span>
+            <span>{payment.posTransactionId}</span>
+          </div>
+          <div className="pr-row">
+            <span>{t('result.dateTime')}</span>
+            <span>{formatDateTime(completedAt)}</span>
+          </div>
+
+          <div className="pr-divider" />
           {payment.items.map((item) => (
-            <p key={item.id}>
-              {lt(item.description)} — {formatMoney(item.amountMinor, item.currency)}
-            </p>
+            <div className="pr-row" key={item.id}>
+              <span>{lt(item.description)}</span>
+              <span>{formatMoney(item.amountMinor, item.currency)}</span>
+            </div>
           ))}
+
+          <div className="pr-divider" />
+          <div className="pr-row pr-total">
+            <span>{t('result.amount')}</span>
+            <span>{formatMoney(payment.amountMinor, payment.currency)}</span>
+          </div>
+
+          {(payment.maskedPan ||
+            payment.authCode ||
+            payment.rrn ||
+            payment.pun ||
+            payment.terminalId) && (
+            <>
+              <div className="pr-divider" />
+              {payment.maskedPan && (
+                <div className="pr-row">
+                  <span>{t('result.card')}</span>
+                  <span>{`${payment.cardScheme ?? ''} ${payment.maskedPan}`.trim()}</span>
+                </div>
+              )}
+              {payment.authCode && (
+                <div className="pr-row">
+                  <span>{t('result.authCode')}</span>
+                  <span>{payment.authCode}</span>
+                </div>
+              )}
+              {payment.rrn && (
+                <div className="pr-row">
+                  <span>{t('result.rrn')}</span>
+                  <span>{payment.rrn}</span>
+                </div>
+              )}
+              {payment.pun && (
+                <div className="pr-row">
+                  <span>{t('result.pun')}</span>
+                  <span>{payment.pun}</span>
+                </div>
+              )}
+              {payment.terminalId && (
+                <div className="pr-row">
+                  <span>{t('result.terminalId')}</span>
+                  <span>{payment.terminalId}</span>
+                </div>
+              )}
+            </>
+          )}
+
+          <div className="pr-divider" />
+          <p className="pr-center pr-thanks">{t('result.thankYou')}</p>
         </div>
       )}
     </div>

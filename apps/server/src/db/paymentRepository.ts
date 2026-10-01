@@ -17,6 +17,11 @@ export interface PaymentRecord {
   cardScheme: string | null;
   failureReason: string | null;
   receiptNumber: string | null;
+  rrn: string | null;
+  pun: string | null;
+  terminalId: string | null;
+  errorCode: string | null;
+  customerMessage: string | null;
   needsReconciliation: boolean;
   createdAt: string;
   updatedAt: string;
@@ -34,6 +39,11 @@ export type PaymentPatch = Partial<
     | 'cardScheme'
     | 'failureReason'
     | 'receiptNumber'
+    | 'rrn'
+    | 'pun'
+    | 'terminalId'
+    | 'errorCode'
+    | 'customerMessage'
     | 'needsReconciliation'
     | 'expiresAt'
     | 'completedAt'
@@ -55,6 +65,11 @@ interface PaymentRow {
   card_scheme: string | null;
   failure_reason: string | null;
   receipt_number: string | null;
+  rrn: string | null;
+  pun: string | null;
+  terminal_id: string | null;
+  error_code: string | null;
+  customer_message: string | null;
   needs_reconciliation: number;
   created_at: string;
   updated_at: string;
@@ -69,6 +84,11 @@ const PATCH_COLUMNS: Record<keyof PaymentPatch, string> = {
   cardScheme: 'card_scheme',
   failureReason: 'failure_reason',
   receiptNumber: 'receipt_number',
+  rrn: 'rrn',
+  pun: 'pun',
+  terminalId: 'terminal_id',
+  errorCode: 'error_code',
+  customerMessage: 'customer_message',
   needsReconciliation: 'needs_reconciliation',
   expiresAt: 'expires_at',
   completedAt: 'completed_at',
@@ -90,6 +110,11 @@ function fromRow(row: PaymentRow): PaymentRecord {
     cardScheme: row.card_scheme,
     failureReason: row.failure_reason,
     receiptNumber: row.receipt_number,
+    rrn: row.rrn,
+    pun: row.pun,
+    terminalId: row.terminal_id,
+    errorCode: row.error_code,
+    customerMessage: row.customer_message,
     needsReconciliation: row.needs_reconciliation === 1,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -119,6 +144,11 @@ export function toPaymentView(record: PaymentRecord): PaymentView {
     maskedPan: record.maskedPan,
     cardScheme: record.cardScheme,
     failureReason: record.failureReason,
+    rrn: record.rrn,
+    pun: record.pun,
+    terminalId: record.terminalId,
+    errorCode: record.errorCode,
+    customerMessage: record.customerMessage,
     createdAt: record.createdAt,
     updatedAt: record.updatedAt,
     expiresAt: record.expiresAt,

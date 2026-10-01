@@ -1,0 +1,13 @@
+{
+  "name": "webhook-receiver",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Standalone public receiver for Noqoody payment webhooks; the kiosk polls it for results.",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node webhook-receiver.mjs"
+  }
+}

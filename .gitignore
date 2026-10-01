@@ -12,3 +12,7 @@ playwright-report/
 .env
 SETTINGS.local.md
 *.log
+*.zip
+.claude/
+bin/
+obj/

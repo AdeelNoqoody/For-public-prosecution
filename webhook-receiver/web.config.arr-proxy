@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  IIS reverse proxy for the webhook-receiver Node service.
+
+  Put this web.config in the folder your IIS virtual directory / application points to, while the
+  Node app runs standalone on localhost:8080 (see README / PM2 step). Every request under the
+  virtual path is forwarded to Node — IIS never serves the source files (.mjs, .env, .db).
+
+  Requires on the server (install once):
+    - URL Rewrite module
+    - Application Request Routing (ARR) — and in IIS Manager > server node > ARR > Server Proxy
+      Settings, tick "Enable proxy".
+
+  If your Node app listens on a different port, change 8080 below.
+  Example resulting URLs (virtual dir = /webhook-receiver):
+    Callback (register in Noqoody):  https://<your-domain>/webhook-receiver/webhooks/pos
+    Kiosk polls:                     https://<your-domain>/webhook-receiver/result/{id}
+-->
+<configuration>
+  <system.webServer>
+    <rewrite>
+      <rules>
+        <rule name="ReverseProxyToNode" stopProcessing="true">
+          <match url="(.*)" />
+          <action type="Rewrite" url="http://localhost:8080/{R:1}" />
+        </rule>
+      </rules>
+    </rewrite>
+    <!-- Never let IIS hand out the source/secret files directly. -->
+    <security>
+      <requestFiltering>
+        <hiddenSegments>
+          <add segment=".env" />
+          <add segment="webhook-results.db" />
+        </hiddenSegments>
+        <fileExtensions>
+          <add fileExtension=".mjs" allowed="false" />
+          <add fileExtension=".db" allowed="false" />
+        </fileExtensions>
+      </requestFiltering>
+    </security>
+  </system.webServer>
+</configuration>

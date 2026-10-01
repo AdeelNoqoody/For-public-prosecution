@@ -27,6 +27,12 @@ export interface PosTransaction {
   maskedPan?: string | null;
   cardScheme?: string | null;
   reason?: string | null;
+  /** Full transaction detail for the receipt/records (populated by the real provider). */
+  rrn?: string | null;
+  pun?: string | null;
+  terminalId?: string | null;
+  errorCode?: string | null;
+  customerMessage?: string | null;
 }
 
 /** A verified, validated result notification from the POS provider. */

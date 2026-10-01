@@ -121,6 +121,11 @@ export class PaymentService {
       cardScheme: null,
       failureReason: null,
       receiptNumber: null,
+      rrn: null,
+      pun: null,
+      terminalId: null,
+      errorCode: null,
+      customerMessage: null,
       needsReconciliation: false,
       createdAt: now,
       updatedAt: now,
@@ -326,6 +331,11 @@ export class PaymentService {
       authCode: tx.authCode ?? null,
       maskedPan: tx.maskedPan ?? null,
       cardScheme: tx.cardScheme ?? null,
+      rrn: tx.rrn ?? null,
+      pun: tx.pun ?? null,
+      terminalId: tx.terminalId ?? null,
+      errorCode: tx.errorCode ?? null,
+      customerMessage: tx.customerMessage ?? null,
       completedAt: now,
     };
 

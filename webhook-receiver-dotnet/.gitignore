@@ -1,0 +1,6 @@
+bin/
+obj/
+webhook-results.json
+appsettings.*.local.json
+appsettings.Production.json
+publish/

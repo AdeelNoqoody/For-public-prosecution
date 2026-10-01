@@ -193,6 +193,11 @@ export class RealPosProvider implements PosProvider {
       maskedPan: maskPan(str(field(detail, 'maskedPan'))),
       cardScheme: str(field(detail, 'cardScheme')) ?? null,
       reason: str(field(detail, 'customerMessage', 'errorMessage', 'errorCode')) ?? null,
+      rrn: str(field(detail, 'rrn')) ?? null,
+      pun: str(field(detail, 'pun')) ?? null,
+      terminalId: str(field(detail, 'terminalId')) ?? null,
+      errorCode: str(field(detail, 'errorCode')) ?? null,
+      customerMessage: str(field(detail, 'customerMessage', 'errorMessage')) ?? null,
       timestamp: envelope.data.timestamp,
     };
   }
@@ -215,6 +220,11 @@ export class RealPosProvider implements PosProvider {
       maskedPan: maskPan(str(field(detail, 'maskedPan'))),
       cardScheme: str(field(detail, 'cardScheme')) ?? null,
       reason: str(field(detail, 'customerMessage', 'errorMessage', 'errorCode')) ?? null,
+      rrn: str(field(detail, 'rrn')) ?? null,
+      pun: str(field(detail, 'pun')) ?? null,
+      terminalId: str(field(detail, 'terminalId')) ?? null,
+      errorCode: str(field(detail, 'errorCode')) ?? null,
+      customerMessage: str(field(detail, 'customerMessage', 'errorMessage')) ?? null,
     };
   }
 

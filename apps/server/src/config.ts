@@ -26,6 +26,11 @@ const EnvSchema = z.object({
   POS_WEBHOOK_TOLERANCE_SECONDS: z.coerce.number().int().positive().default(300),
   POS_REQUEST_TIMEOUT_MS: z.coerce.number().int().positive().default(10_000),
 
+  /** Base URL of the public webhook-receiver the kiosk polls for results (e.g. https://pp.enoqoody.com). Empty = disabled. */
+  RECEIVER_URL: z.string().default(''),
+  /** How often (ms) to poll the receiver's /result/{id} for a pending payment. */
+  RECEIVER_POLL_INTERVAL_MS: z.coerce.number().int().positive().default(1500),
+
   PAYMENT_TIMEOUT_SECONDS: z.coerce.number().int().positive().default(120),
   /** Hard cap per payment in minor units (100 = 1.00 QAR) for the live-POS demo. 0 = no limit. */
   MAX_PAYMENT_AMOUNT_MINOR: z.coerce.number().int().nonnegative().default(100),

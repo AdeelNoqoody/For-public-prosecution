@@ -184,12 +184,50 @@ img {
     width: 72mm;
     padding: 4mm;
     color: #000;
-    font-size: 11pt;
-    line-height: 1.4;
+    font-size: 9.5pt;
+    line-height: 1.45;
+    font-family: 'Segoe UI', Tahoma, system-ui, sans-serif;
   }
   .print-receipt h2 {
-    font-size: 14pt;
+    font-size: 13pt;
     font-weight: 700;
-    margin-bottom: 2mm;
+    margin: 0 0 1mm;
+  }
+  .print-receipt .pr-center {
+    text-align: center;
+  }
+  .print-receipt .pr-status {
+    font-weight: 600;
+    margin: 0;
+  }
+  .print-receipt .pr-divider {
+    border-top: 1px dashed #000;
+    margin: 2mm 0;
+  }
+  .print-receipt .pr-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 4mm;
+    margin: 0.8mm 0;
+  }
+  .print-receipt .pr-row > span:first-child {
+    flex-shrink: 0;
+    color: #222;
+  }
+  .print-receipt .pr-row > span:last-child {
+    text-align: end;
+    font-weight: 600;
+    word-break: break-word;
+    min-width: 0;
+  }
+  .print-receipt .pr-total {
+    font-size: 11pt;
+  }
+  .print-receipt .pr-total > span {
+    font-weight: 700;
+  }
+  .print-receipt .pr-thanks {
+    margin: 0;
+    font-weight: 600;
   }
 }
