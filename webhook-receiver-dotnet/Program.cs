@@ -34,12 +34,22 @@ if (string.IsNullOrEmpty(webhookSecret) || string.IsNullOrEmpty(encryptionKey))
 var store = new ResultStore(resultsPath);
 var crypto = new NoqoodyCrypto(encryptionKey);
 
-app.MapGet("/health", () => Results.Ok(new { status = "ok", service = "webhook-receiver" }));
+// Plain-text file log with timestamps (LOG_PATH, default logs/receiver.log next to the app).
+var logPath = builder.Configuration["LOG_PATH"] ?? "logs/receiver.log";
+FileLog.Init(logPath);
+FileLog.Write($"=== webhook-receiver STARTED (results={resultsPath}) ===");
+
+app.MapGet("/health", () =>
+{
+    FileLog.Write("GET /health");
+    return Results.Ok(new { status = "ok", service = "webhook-receiver" });
+});
 
 // Kiosk polls this. {id} may be the Noqoody paymentId OR the orderId (merchantReference).
 app.MapGet("/result/{id}", (string id) =>
 {
     var row = store.Find(id);
+    FileLog.Write($"GET /result/{id}  ->  found={(row is not null)} {(row?.Status ?? "")}");
     return row is null
         ? Results.Ok(new { found = false, status = "pending" })
         : Results.Json(row.Payload);
@@ -51,12 +61,17 @@ app.MapPost("/webhooks/pos", async (HttpRequest request) =>
     var rawBody = await reader.ReadToEndAsync();
     var timestamp = request.Headers["X-Webhook-Timestamp"].ToString();
     var signature = request.Headers["X-Webhook-Signature"].ToString();
+    var eventHeader = request.Headers["X-Webhook-Event"].ToString();
+
+    FileLog.Write($"POST /webhooks/pos  event='{eventHeader}' ts='{timestamp}' sigLen={signature.Length} bodyLen={rawBody.Length}");
 
     if (!Signatures.Verify(rawBody, timestamp, signature, webhookSecret))
     {
         app.Logger.LogWarning("Rejected webhook: bad signature");
+        FileLog.Write("  -> REJECTED 401: bad signature (secrets is merchant ke match nahi karte?)");
         return Results.Json(new { error = "invalid signature" }, statusCode: 401);
     }
+    FileLog.Write("  -> signature OK");
 
     Dictionary<string, JsonElement> envelope;
     try
@@ -65,6 +80,7 @@ app.MapPost("/webhooks/pos", async (HttpRequest request) =>
     }
     catch
     {
+        FileLog.Write("  -> 400: invalid json");
         return Results.Json(new { error = "invalid json" }, statusCode: 400);
     }
 
@@ -82,6 +98,7 @@ app.MapPost("/webhooks/pos", async (HttpRequest request) =>
     catch (Exception ex)
     {
         app.Logger.LogError(ex, "Decrypt failed");
+        FileLog.Write($"  -> 400: decrypt failed: {ex.Message}");
         return Results.Json(new { error = "decrypt failed" }, statusCode: 400);
     }
 
@@ -118,12 +135,15 @@ app.MapPost("/webhooks/pos", async (HttpRequest request) =>
         store.Save(paymentId!, orderId, status, result);
         app.Logger.LogInformation("Stored {Event} paymentId={PaymentId} order={OrderId}",
             result.@event ?? status, paymentId, orderId);
+        FileLog.Write($"  -> STORED ✅ paymentId={paymentId} order={orderId} status={status} card={result.cardScheme} {result.maskedPan} reason={result.customerMessage}");
     }
     else
     {
         app.Logger.LogWarning("Webhook had no paymentId; not stored");
+        FileLog.Write("  -> NOT stored: no paymentId in webhook");
     }
 
+    FileLog.Write("  -> responded 200 received:true");
     return Results.Ok(new { received = true }); // 2xx quickly so Noqoody marks it delivered.
 });
 
@@ -135,6 +155,33 @@ static Dictionary<string, JsonElement> ToDict(JsonElement obj)
     var d = new Dictionary<string, JsonElement>(StringComparer.OrdinalIgnoreCase);
     foreach (var p in obj.EnumerateObject()) d[p.Name] = p.Value;
     return d;
+}
+
+// ─── Timestamped plain-text file log (.txt) ─────────────────────────────────
+static class FileLog
+{
+    private static readonly object Gate = new();
+    private static string _path = "logs/receiver.log";
+
+    public static void Init(string path)
+    {
+        _path = path;
+        try
+        {
+            var dir = Path.GetDirectoryName(Path.GetFullPath(_path));
+            if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
+        }
+        catch { /* ignore */ }
+    }
+
+    public static void Write(string message)
+    {
+        var line = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}  {message}{Environment.NewLine}";
+        lock (Gate)
+        {
+            try { File.AppendAllText(_path, line); } catch { /* best-effort */ }
+        }
+    }
 }
 
 // ─── Signature (HMAC-SHA256 of `${timestamp}.${rawBody}`) ───────────────────
